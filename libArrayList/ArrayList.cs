@@ -14,8 +14,21 @@ namespace libArrayList
         #region Properties
         public T this[int index]   // property
         {
-            get { return theArray[index]; }   // get method
-            set { theArray[index] = value; }  // set method
+            get // get method
+            {
+                if (theArray.Length > index) return theArray[index];
+                else return default;
+            }
+            set // set method
+            { 
+                
+                while (index >= theArray.Length)
+                {
+                    ExtendArray();
+                }
+                theArray[index] = value;
+                count++; // --> STIMMT SO NOCH NICHT - DARF NICHT IMMER HOCHZÄHLEN
+            }  
         }
 
         public int count { get; private set; }
@@ -106,11 +119,11 @@ namespace libArrayList
         }
 
         /// <summary>
-        /// Verkleinere das Array um das Doppelte
+        /// Vergrößere das Array um das Doppelte
         /// </summary>
         private void ExtendArray()
         {
-            Array.Resize(ref theArray, count * 2);
+            Array.Resize(ref theArray, theArray.Length * 2);
         }
 
         /// <summary>
@@ -127,16 +140,17 @@ namespace libArrayList
         /// </summary>
         /// <param name="index"></param>
         /// <param name="value"></param>
-        public void InsertAt(int index, T value)
+        public void InsertAt(int idx, T val)
         {
 
-            if (theArray.Length <= count)
+            while (theArray.Length < idx)
             {
                 ExtendArray();
             }
 
-            Array.Copy(theArray, index, theArray, index + 1, count - index);
-            theArray[index] = value;
+            int length = theArray.Length - idx;
+            Array.Copy(theArray, idx, theArray, idx + 1, length);
+            theArray[idx] = val;
             count++;
         }
     }
